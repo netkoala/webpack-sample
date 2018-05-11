@@ -14,7 +14,7 @@ module.exports = {
     context: path.resolve(__dirname, '../'),
     entry: {//入口點
         // vendors: ['vue'],
-        vendors: [path.resolve(__dirname, '../src/Content/js/vendor/jquery-3.2.1.js')],
+        vendors: [ path.resolve(__dirname, '../src/Content/js/vendor/jquery-3.2.1.js'), 'vue', 'vue-router' ],
 
         index: path.resolve(__dirname, '../src/index.js') //指定要編譯的檔案位置
     },

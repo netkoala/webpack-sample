@@ -36,7 +36,7 @@ module.exports = merge(baseConfig, {
                 vendors: {
                     chunks: 'all',
                     name: "vendors",
-                    test: 'vendor'
+                    test: '/vendor|[\\/]node_modules[\\/]/'
                 },
             }
         }, 

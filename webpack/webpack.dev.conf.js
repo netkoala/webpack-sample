@@ -55,28 +55,36 @@ module.exports = merge(baseConfig, {
             poll: config.dev.poll
         }
     },
+    optimization: { 
+        splitChunks: {
+            cacheGroups: {
+                vendors: {
+                    chunks: 'all',
+                    name: "vendors",
+                    test: 'vendor'
+                },
+            }
+        },
+        runtimeChunk: {
+            name: "manifest"
+        },
+        
+        // webpack4 NamedModulesPlugin->optimization.namedModules(development 默認開啟)
+        namedModules: true,
+         // webpack4 NoEmitOnErrorsPlugin -> optimization.noEmitOnErrors
+        noEmitOnErrors: true
+    },
     plugins: [
         new webpack.DefinePlugin({
             'process.env': require('../config/dev.env')
         }),
+        //啟用熱加載 HMR
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-        //TODO: 
-        //1.NoEmitOnErrorsPlugin -> optimization.noEmitOnErrors
-        //2.CommonsChunkPlugin was removed -> optimization.splitChunks, optimization.runtimeChunk
-        new webpack.NoEmitOnErrorsPlugin(),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'index.html',
             inject: true
-        }),
-        // new CopyWebpackPlugin([
-        //     {
-        //         from: path.resolve(__dirname, '../Content'),
-        //         to: 'Content',
-        //         ignore: ['.*']
-        //     }
-        // ])
+        })
     ]
 });
 

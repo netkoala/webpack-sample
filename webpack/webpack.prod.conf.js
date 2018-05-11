@@ -1,13 +1,14 @@
 "use strict";
-var path = require('path');
-var config = require('../config/base')
-var webpack = require('webpack')
-var merge = require('webpack-merge');
-var baseConfig = require('./webpack.base.conf.js');
-var CopyWebpackPlugin = require('copy-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+const config = require('../config/base')
+const webpack = require('webpack')
+const merge = require('webpack-merge');
+const baseConfig = require('./webpack.base.conf.js');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = merge(baseConfig, {
     mode: 'production',
@@ -25,22 +26,28 @@ module.exports = merge(baseConfig, {
                         }
                     }
                 ]
-                // loader: ExtractTextPlugin.extract({
-                //     use: [
-                //         {
-                //             loader: 'css-loader',
-                //             options: {
-                //                 url: false,
-                //                 minimize: true || {/* CSSNano Options */ }
-                //             }
-                //         }
-                //     ]
-                // })
             }
         ]
     },
     devtool: config.build.productionSourceMap ? config.build.devtool : false,
+    optimization: {
+        splitChunks: { 
+            cacheGroups: {
+                vendors: {
+                    chunks: 'all',
+                    name: "vendors",
+                    test: 'vendor'
+                },
+            }
+        }, 
+        runtimeChunk: {
+            name: "manifest"
+        }
+    },
     plugins: [
+        new CleanWebpackPlugin(['dist'], {
+            root: path.resolve(__dirname, '..')
+        }),
         new webpack.DefinePlugin({
             'process.env': require('../config/prod.env')
         }),
@@ -58,9 +65,5 @@ module.exports = merge(baseConfig, {
         new MiniCssExtractPlugin({
             filename: 'Content/css/[name].css'
         })
-        // new ExtractTextPlugin({
-        //     filename: 'Content/css/[name].css',
-        //     allChunks: true
-        // })
     ]
 });
